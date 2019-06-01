@@ -116,6 +116,7 @@ SUPPORTED_PROFILES = {
         "outputs": "concat_63:0,concat_64:0",
         "dataset": "coco-1200",
         "backend": "tensorflow",
+        "data-format" : "NCHW"
     },
     "ssd-resnet34-pytorch": {
         "inputs": "image",
@@ -251,6 +252,7 @@ class RunnerBase:
         processed_results = []
         try:
             results = self.model.predict({self.model.inputs[0]: qitem.img})
+            import pdb; pdb.set_trace()
             processed_results = self.post_process(results, qitem.content_id, qitem.label, self.result_dict)
             if self.take_accuracy:
                 self.post_process.add_results(processed_results)
@@ -355,6 +357,7 @@ def main():
     image_format = args.data_format if args.data_format else backend.image_format()
 
     # dataset to use
+    import pdb; pdb.set_trace()
     wanted_dataset, pre_proc, post_proc, kwargs = SUPPORTED_DATASETS[args.dataset]
     ds = wanted_dataset(data_path=args.dataset_path,
                         image_list=args.dataset_list,

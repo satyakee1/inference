@@ -219,12 +219,15 @@ def pre_process_coco_mobilenet(img, dims=None, need_transpose=False):
 def pre_process_coco_resnet34(img, dims=None, need_transpose=False):
     if img.mode != 'RGB':
         img = img.convert('RGB')
-
+    
+    output_height, output_width, _ = dims
+    img = img.resize((output_width, output_height), 2) #PIL.Image.BILINEAR
+    img = np.asarray(img, dtype='float32')
     mean = np.array([0.485, 0.456, 0.406], dtype=np.float32)
     std = np.array([0.229, 0.224, 0.225], dtype=np.float32)
-    img_data = np.array(img.getdata(), dtype=np.float32)
-    (im_width, im_height) = img.size
-    img = img_data.reshape(im_height, im_width, 3)
+    #img_data = np.array(img.getdata(), dtype=np.float32)
+    #(im_width, im_height) = img.size
+    #img = img_data.reshape(im_height, im_width, 3)
     img = img / 255. - mean
     img = img / std
     if need_transpose:
